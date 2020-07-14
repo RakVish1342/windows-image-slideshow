@@ -1,4 +1,3 @@
-from matplotlib import pyplot as plt
 from PIL import Image, ImageDraw, ImageFont, ExifTags
 import glob
 import math
