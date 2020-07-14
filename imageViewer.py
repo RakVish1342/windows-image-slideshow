@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
 from PIL import Image, ImageDraw, ImageFont, ExifTags
 import glob
+import math
 import os
 
 # Add another backslash before each backslash in the path copied.
@@ -12,19 +13,21 @@ os.chdir(path)
 for file in glob.glob(globFileType):
     print("Viewing file: ", file)
     img = Image.open(file)
+    width, height = img.size
     exif = { ExifTags.TAGS[k]: v for k, v in img._getexif().items() if k in ExifTags.TAGS }
     comment = exif['XPComment'].decode('utf-16-le').split('\x00')[0] # OR just use .decode('utf-16')
     print(comment)
-
-
     # img.show()
 
-    draw = ImageDraw.Draw(img)
-
+    cmtBar = Image.new('RGBA', (width+10, math.ceil(height+height/5)), 'black')
+    border = 5
+    cmtBar.paste(img, (border,border,width+border, height+border))
+    
+    draw = ImageDraw.Draw(cmtBar)
     font = ImageFont.truetype('arial.ttf', size=70)
-    (x, y) = (50, 50)
-    color = 'rgb(0, 0, 0)' # black color
-    draw.text((x, y), comment, fill=color, font=font)
+    location = (50, 50)
+    color = 'rgb(255, 255, 255)' # black color
+    draw.text(location, comment, fill=color, font=font)
+    w, h = font.getsize(comment)
 
-
-    img.show()
+    cmtBar.show()
