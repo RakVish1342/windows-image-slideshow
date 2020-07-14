@@ -11,7 +11,10 @@ path = "./images"
 
 globFileType = "*.jpg"
 os.chdir(path)
-for file in glob.glob(globFileType):
+files = glob.glob(globFileType)
+idx = 0
+while(idx < len(files)):
+    file = files[idx]
     print('------')
     print("Viewing file: ", file)
     img = Image.open(file)
@@ -77,7 +80,7 @@ for file in glob.glob(globFileType):
     '''
     User Input
     '''
-    cmd = input("Give me a command: Press 'q' to quit. Press 'n' for the next image. ")
+    cmd = input("Enter command: 'n' for next image, 'b' for previous image, 'q' to quit. ")
     # print("CMD::: ", ord(cmd), cmd)
     cmd = ord(cmd)
     while (1):
@@ -86,12 +89,24 @@ for file in glob.glob(globFileType):
             break
         elif(cmd == 78 or cmd == 110): # N=78 or n=110
             cmtBar.close()
+            idx += 1
             exitFlag = False
             break
+        elif(cmd == 66 or cmd == 98): # B=66 or b=98
+            cmtBar.close()
+            idx -= 1
+            exitFlag = False
+            break            
         else:
-            cmd = input("Invalid Option. Press 'q' to quit. Press 'n' for the next image. ")
+            cmd = input("Invalid Option. Press 'n' for next image, 'b' for previous image, 'q' to quit. ")
             cmd = ord(cmd)
             continue
+
+    if(idx < 0): # If user types 'b' on the first image
+        print("---")
+        print("Already at the first image.")
+        print("---")
+        idx = 0
 
     if(exitFlag):
         break
