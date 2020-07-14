@@ -26,7 +26,7 @@ for file in glob.glob(globFileType):
     
     draw = ImageDraw.Draw(cmtBar)
     font = ImageFont.truetype('arial.ttf', size=70)
-    location = (50, 50)
+    location = (0, height)
     color = 'rgb(255, 255, 255)' # black color
     draw.text(location, comment, fill=color, font=font)
     w, h = font.getsize(comment)
