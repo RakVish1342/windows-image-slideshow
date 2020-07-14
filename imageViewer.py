@@ -23,26 +23,51 @@ for file in glob.glob(globFileType):
     print(comment)
     # img.show()
 
-    cmtBar = Image.new('RGBA', (imgWidth+10, math.ceil(imgHeight+imgHeight/5)), 'black')
-    border = 5
-    cmtBar.paste(img, (border,border,imgWidth+border, imgHeight+border))
-    
-    draw = ImageDraw.Draw(cmtBar)
-    font = ImageFont.truetype('arial.ttf', size=70)
-    color = 'rgb(255, 255, 255)'
 
+    '''
+    Comment Bar Settings
+    '''
+
+    # Font Settings 1
+    font = ImageFont.truetype('arial.ttf', size=70)
     # Some sample test text for character width. Use of words compacts text, so less than 40 per character is used
     # w, h = font.getsize("D ") 
     # print("Character width and height ", w, h)
 
+    # Comment Bar height
+    margin = offset = charWidth = 40 # 40 = Approximate/max size of a character
+    scale = 1.3 # Since characters together as words usually take less space, add some buffer space
+    ctr = 0.3
+    for line in textwrap.wrap(comment, width=scale*imgWidth/charWidth):
+        offset += font.getsize(line)[1]
+        ctr += 1
+
+    charHeight = 94
+    cmtBar = Image.new('RGBA', (imgWidth + 10, math.ceil(imgHeight + charHeight*ctr)), 'black')
+    border = 5
+    cmtBar.paste(img, (border,border,imgWidth+border, imgHeight+border))
+
+    # Font Settings 2
+    draw = ImageDraw.Draw(cmtBar)
+    color = 'rgb(255, 255, 255)'
+
+    # Text Wrapping
     margin = offset = charWidth = 40 # 40 = Approximate/max size of a character
     scale = 1.3 # Since characters together as words usually take less space, add some buffer space
     for line in textwrap.wrap(comment, width=scale*imgWidth/charWidth):
         draw.text((margin, imgHeight+offset), line, font=font, fill=color)
         offset += font.getsize(line)[1]
 
+
+    '''
+    Display Image
+    '''
     cmtBar.show()
 
+
+    '''
+    User Input
+    '''
     cmd = input("Give me a command: Press 'q' to quit. Press 'n' for the next image. ")
     # print("CMD::: ", ord(cmd), cmd)
     cmd = ord(cmd)
