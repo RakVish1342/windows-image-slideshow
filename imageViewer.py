@@ -19,50 +19,60 @@ for file in glob.glob(globFileType):
     imgWidth, imgHeight = img.size
     # print(imgWidth, imgHeight)
     exif = { ExifTags.TAGS[k]: v for k, v in img._getexif().items() if k in ExifTags.TAGS }
-    comment = exif['XPComment'].decode('utf-16-le').split('\x00')[0] # OR just use .decode('utf-16')
-    print(comment)
-    # img.show()
+    if('XPComment' in exif):
+        comment = exif['XPComment'].decode('utf-16-le').split('\x00')[0] # OR just use .decode('utf-16')
+        print("Comment: ", comment)
+        addCommentBar = True
+    else:
+        addCommentBar = False
 
-
+    
     '''
-    Comment Bar Settings
+    No Comment Bar to be added
     '''
+    if(not addCommentBar):
+        img.show()
 
-    # Font Settings 1
-    font = ImageFont.truetype('arial.ttf', size=70)
-    # Some sample test text for character width. Use of words compacts text, so less than 40 per character is used
-    # w, h = font.getsize("D ") 
-    # print("Character width and height ", w, h)
+    else:
+        '''
+        Comment Bar Settings
+        '''
 
-    # Comment Bar height
-    margin = offset = charWidth = 40 # 40 = Approximate/max size of a character
-    scale = 1.3 # Since characters together as words usually take less space, add some buffer space
-    ctr = 0.3
-    for line in textwrap.wrap(comment, width=scale*imgWidth/charWidth):
-        offset += font.getsize(line)[1]
-        ctr += 1
+        # Font Settings 1
+        font = ImageFont.truetype('arial.ttf', size=70)
+        # Some sample test text for character width. Use of words compacts text, so less than 40 per character is used
+        # w, h = font.getsize("D ") 
+        # print("Character width and height ", w, h)
 
-    charHeight = 94
-    cmtBar = Image.new('RGBA', (imgWidth + 10, math.ceil(imgHeight + charHeight*ctr)), 'black')
-    border = 5
-    cmtBar.paste(img, (border,border,imgWidth+border, imgHeight+border))
+        # Comment Bar height
+        margin = offset = charWidth = 40 # 40 = Approximate/max size of a character
+        scale = 1.3 # Since characters together as words usually take less space, add some buffer space
+        ctr = 0.3
+        for line in textwrap.wrap(comment, width=scale*imgWidth/charWidth):
+            offset += font.getsize(line)[1]
+            ctr += 1
 
-    # Font Settings 2
-    draw = ImageDraw.Draw(cmtBar)
-    color = 'rgb(255, 255, 255)'
+        charHeight = 94
+        cmtBar = Image.new('RGBA', (imgWidth + 10, math.ceil(imgHeight + charHeight*ctr)), 'black')
+        border = 5
+        cmtBar.paste(img, (border,border,imgWidth+border, imgHeight+border))
 
-    # Text Wrapping
-    margin = offset = charWidth = 40 # 40 = Approximate/max size of a character
-    scale = 1.3 # Since characters together as words usually take less space, add some buffer space
-    for line in textwrap.wrap(comment, width=scale*imgWidth/charWidth):
-        draw.text((margin, imgHeight+offset), line, font=font, fill=color)
-        offset += font.getsize(line)[1]
+        # Font Settings 2
+        draw = ImageDraw.Draw(cmtBar)
+        color = 'rgb(255, 255, 255)'
+
+        # Text Wrapping
+        margin = offset = charWidth = 40 # 40 = Approximate/max size of a character
+        scale = 1.3 # Since characters together as words usually take less space, add some buffer space
+        for line in textwrap.wrap(comment, width=scale*imgWidth/charWidth):
+            draw.text((margin, imgHeight+offset), line, font=font, fill=color)
+            offset += font.getsize(line)[1]
 
 
-    '''
-    Display Image
-    '''
-    cmtBar.show()
+        '''
+        Display Image
+        '''
+        cmtBar.show()
 
 
     '''
