@@ -4,8 +4,9 @@ import glob
 import math
 import os
 
-# Add another backslash before each backslash in the path copied.
-path = "C:\\Users\\Vish\\Desktop\\gmk\\comments"
+# Replace path with image location
+# Example: "C:\Users\tmp\images" becomes "C:\\Users\\tmp\\images"  
+path = "./images"
 
 
 globFileType = "*.jpg"
